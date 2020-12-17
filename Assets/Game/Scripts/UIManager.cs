@@ -22,4 +22,9 @@ public class UIManager : Singleton<UIManager>
     {
         
     }
+
+    public void UpdateScore(int p_score)
+    {
+        m_ScoreText.text = "Score: " + p_score.ToString();
+    }
 }
