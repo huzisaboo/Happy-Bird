@@ -41,5 +41,6 @@ public class BirdMovement : MonoBehaviour
     {
         m_isDead = true;
         m_animator.SetTrigger("Dead");
+        GameManager.Instance.EndGame();
     }
 }
