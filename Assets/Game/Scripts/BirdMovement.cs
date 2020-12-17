@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BirdMovement : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class BirdMovement : MonoBehaviour
     {
         m_rigidBody = GetComponent<Rigidbody2D>();
         m_animator = GetComponent<Animator>();
+        m_rigidBody.isKinematic = true;
     }
 
     // Update is called once per frame
@@ -24,16 +26,22 @@ public class BirdMovement : MonoBehaviour
 
     private void FlapUpdate()
     {
-        if (Input.touchCount > 0 && m_isDead == false)
-        {
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
+       
+            if (Input.touchCount > 0 && GameManager.Instance.IsGameStarted() && m_isDead == false)
             {
-                m_rigidBody.velocity = Vector2.zero;
-                m_rigidBody.AddForce(Vector2.up * m_force);
-                m_animator.SetTrigger("Flap");
+                if (m_rigidBody.isKinematic)
+                {
+                    m_rigidBody.isKinematic = false;
+                }
+
+                if (Input.GetTouch(0).phase == TouchPhase.Began)
+                {
+                    m_rigidBody.velocity = Vector2.zero;
+                    m_rigidBody.AddForce(Vector2.up * m_force);
+                    m_animator.SetTrigger("Flap");
+                }
+
             }
-        
-        }
     }
 
 

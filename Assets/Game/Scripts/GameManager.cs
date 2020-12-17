@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
@@ -8,18 +9,24 @@ public class GameManager : Singleton<GameManager>
     private int m_score;
     private bool m_startGame = false;
     public float m_envMoveSpeed = 5.0f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartGame();
-    }
-
+    private bool m_highscoreUpdated = false;
+  
     // Update is called once per frame
     void Update()
     {
-        if(Input.touchCount > 0 && m_startGame == false)
+     
+        if(UIManager.Instance.IsMainMenuPanelActive())
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            if(!m_highscoreUpdated)
+            {
+                UIManager.Instance.UpdateHighScore(ScoreMaintainer.Score);
+                m_highscoreUpdated = true;
+
+            }
+            if (Input.touchCount > 0 && m_startGame == false)
+            {
+                StartGame();
+            }
         }
     }
 
@@ -36,9 +43,12 @@ public class GameManager : Singleton<GameManager>
     public void EndGame()
     {
         m_startGame = false;
-
-        UIManager.Instance.m_inGameUIPanel.SetActive(false);
+       // UIManager.Instance.m_inGameUIPanel.SetActive(false);
         UIManager.Instance.m_gameOverPanel.SetActive(true);
+        if(m_score > ScoreMaintainer.Score)
+        {
+            ScoreMaintainer.Score = m_score;
+        }
     }
 
     public void IncreaseScore()
@@ -50,5 +60,10 @@ public class GameManager : Singleton<GameManager>
     public bool IsGameStarted()
     {
        return m_startGame;
+    }
+
+    public void OnQuit()
+    {
+        Application.Quit();
     }
 }
