@@ -9,11 +9,13 @@ public class BirdMovement : MonoBehaviour
     Rigidbody2D m_rigidBody;
     private bool m_isDead = false;
     Animator m_animator;
+    BirdAudio m_birdAudio;
     // Start is called before the first frame update
     void Start()
     {
         m_rigidBody = GetComponent<Rigidbody2D>();
         m_animator = GetComponent<Animator>();
+        m_birdAudio = GetComponent<BirdAudio>();
         m_rigidBody.isKinematic = true;
     }
 
@@ -39,6 +41,7 @@ public class BirdMovement : MonoBehaviour
                     m_rigidBody.velocity = Vector2.zero;
                     m_rigidBody.AddForce(Vector2.up * m_force);
                     m_animator.SetTrigger("Flap");
+                    m_birdAudio.PlayFlapAudio();
                 }
 
             }
@@ -47,8 +50,13 @@ public class BirdMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        m_isDead = true;
-        m_animator.SetTrigger("Dead");
-        GameManager.Instance.EndGame();
+        if(!m_isDead)
+        {
+            m_isDead = true;
+            m_animator.SetTrigger("Dead");
+            GameManager.Instance.EndGame();
+            m_birdAudio.PlayDieAudio();
+            GameManager.Instance.StopBgMusic();
+        }
     }
 }

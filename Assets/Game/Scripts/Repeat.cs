@@ -20,7 +20,6 @@ public class Repeat : MonoBehaviour
         {
             RePositionBg();
         }
-       
     }
 
     private void RePositionBg()

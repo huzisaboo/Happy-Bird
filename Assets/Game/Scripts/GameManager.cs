@@ -6,11 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    private AudioSource m_audioSource;
     private int m_score;
     private bool m_startGame = false;
     public float m_envMoveSpeed = 5.0f;
     private bool m_highscoreUpdated = false;
-  
+
+    private void Start()
+    {
+        m_audioSource = GetComponent<AudioSource>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -65,5 +71,16 @@ public class GameManager : Singleton<GameManager>
     public void OnQuit()
     {
         Application.Quit();
+    }
+
+    public void StopBgMusic()
+    {
+        if(m_audioSource != null)
+        {
+            if(m_audioSource.isPlaying)
+            {
+                m_audioSource.Stop();
+            }
+        }
     }
 }
